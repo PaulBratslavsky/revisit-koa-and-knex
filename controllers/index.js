@@ -1,17 +1,39 @@
-module.exports = () => ({
-  rootRoute: async (ctx) => {
-    ctx.body = "Root Route";
-  },
+const services = require('../services');
 
-  apiInfoRoute: async (ctx) => {
-    ctx.body = "API Info Route";
-  },
+const getPost = async (ctx) => {
+  const id = ctx.params.id;
+  const post = await services.getPost(ctx, id);
+  ctx.body = post || "Post not found";
+};
 
-  create: async (ctx) => {
-    ctx.body = "Create Route";
-  },
+const getPosts = async (ctx) => {
+  const posts = await services.getPosts(ctx);
+  ctx.body = posts;
+};
 
-  find: async (ctx) => {
-    ctx.body = "Find Route";
-  },
-});
+const createPost = async (ctx) => {
+  const newPost = ctx.request.body;
+  const post = await services.createPost(ctx, newPost);
+  ctx.body = post;
+};
+
+const updatePost = async (ctx) => {
+  const id = ctx.params.id;
+  const updatedPostData = ctx.request.body;
+  const updatedPost = await services.updatePost(ctx, id, updatedPostData);
+  ctx.body = updatedPost || "Update failed";
+};
+
+const deletePost = async (ctx) => {
+  const id = ctx.params.id;
+  await services.deletePost(ctx, id);
+  ctx.body = "Post deleted";
+};
+
+module.exports = {
+  getPost,
+  getPosts,
+  createPost,
+  updatePost,
+  deletePost
+};
